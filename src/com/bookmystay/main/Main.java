@@ -1,23 +1,20 @@
 package com.bookmystay.main;
 
-import com.bookmystay.repository.RoomInventory;
-import com.bookmystay.service.RoomSearchService;
+import com.bookmystay.model.BookingRequest;
+import com.bookmystay.service.BookingService;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        RoomInventory inventory = new RoomInventory();
+        BookingService service = new BookingService();
 
-        // Initialize
-        inventory.addRoomType("Single", 5);
-        inventory.addRoomType("Double", 0); // not available
-        inventory.addRoomType("Suite", 2);
+        // Add booking requests
+        service.addRequest(new BookingRequest("Saksham", "Single"));
+        service.addRequest(new BookingRequest("Rahul", "Double"));
+        service.addRequest(new BookingRequest("Amit", "Suite"));
 
-        // Search service
-        RoomSearchService searchService = new RoomSearchService(inventory);
-
-        // Show available rooms
-        searchService.showAvailableRooms();
+        // View queue
+        service.viewRequests();
     }
 }
