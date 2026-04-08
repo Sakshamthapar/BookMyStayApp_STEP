@@ -1,32 +1,34 @@
 package com.bookmystay.main;
 
-import com.bookmystay.model.BookingRequest;
 import com.bookmystay.repository.RoomInventory;
-import com.bookmystay.service.*;
+import com.bookmystay.service.BookingHistoryService;
+import com.bookmystay.util.PersistenceService;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        RoomInventory inventory = new RoomInventory();
-        inventory.addRoomType("Single", 2);
+        // Try loading previous data
+        RoomInventory inventory = (RoomInventory)
+                PersistenceService.load("inventory.dat");
 
-        BookingHistoryService history = new BookingHistoryService();
-        BookingService service = new BookingService(inventory, history);
+        BookingHistoryService history = (BookingHistoryService)
+                PersistenceService.load("history.dat");
 
-        // Create requests
-        BookingRequest r1 = new BookingRequest("User1", "Single");
-        BookingRequest r2 = new BookingRequest("User2", "Single");
-        BookingRequest r3 = new BookingRequest("User3", "Single");
+        // If no data exists → create new
+        if (inventory == null) {
+            inventory = new RoomInventory();
+            inventory.addRoomType("Single", 2);
+        }
 
-        // Create threads
-        Thread t1 = new Thread(new BookingTask(service, r1, 1));
-        Thread t2 = new Thread(new BookingTask(service, r2, 2));
-        Thread t3 = new Thread(new BookingTask(service, r3, 3));
+        if (history == null) {
+            history = new BookingHistoryService();
+        }
 
-        // Start threads
-        t1.start();
-        t2.start();
-        t3.start();
+        // Simulate system usage here...
+
+        // Save before exit
+        PersistenceService.save(inventory, "inventory.dat");
+        PersistenceService.save(history, "history.dat");
     }
 }

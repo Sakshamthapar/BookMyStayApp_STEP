@@ -1,4 +1,5 @@
 package com.bookmystay.repository;
+implements java.io.Serializable
 
 import java.util.HashMap;
 import java.util.Map;

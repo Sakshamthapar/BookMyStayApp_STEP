@@ -1,4 +1,5 @@
 package com.bookmystay.model;
+implements java.io.Serializable
 
 public class BookingRecord {
 

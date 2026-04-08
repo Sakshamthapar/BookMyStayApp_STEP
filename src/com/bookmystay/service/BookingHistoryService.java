@@ -1,5 +1,5 @@
 package com.bookmystay.service;
-
+implements java.io.Serializable
 import com.bookmystay.model.BookingRecord;
 import java.util.*;
 
