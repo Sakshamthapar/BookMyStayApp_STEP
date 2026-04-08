@@ -12,10 +12,13 @@ public class BookingService {
     private Map<String, Set<String>> allocationMap;
     private RoomInventory inventory;
     private BookingHistoryService historyService;
+    private BookingValidator validator;
 
     public BookingService(RoomInventory inventory, BookingHistoryService historyService) {
         this.inventory = inventory;
         this.historyService = historyService;
+        this.validator = new BookingValidator(inventory);
+
         bookingQueue = new LinkedList<>();
         assignedRooms = new HashSet<>();
         allocationMap = new HashMap<>();
@@ -34,31 +37,44 @@ public class BookingService {
         int roomCounter = 1;
 
         while (!bookingQueue.isEmpty()) {
+
             BookingRequest request = bookingQueue.poll();
             String type = request.getRoomType();
 
-            if (inventory.getAvailability(type) > 0) {
+            try {
+                validator.validate(request.getUserName(), type);
 
-                // Generate unique room ID
-                String roomId = type + "-" + roomCounter++;
+                if (inventory.getAvailability(type) > 0) {
 
-                // Prevent duplicate
-                if (!assignedRooms.contains(roomId)) {
+                    String roomId = type + "-" + roomCounter++;
 
-                    assignedRooms.add(roomId);
+                    if (!assignedRooms.contains(roomId)) {
 
-                    allocationMap.putIfAbsent(type, new HashSet<>());
-                    allocationMap.get(type).add(roomId);
+                        assignedRooms.add(roomId);
 
-                    inventory.bookRoom(type);
+                        allocationMap.putIfAbsent(type, new HashSet<>());
+                        allocationMap.get(type).add(roomId);
 
-                    System.out.println("Booking Confirmed for "
-                            + request.getUserName() + " → Room ID: " + roomId);
+                        inventory.bookRoom(type);
+
+                        historyService.addRecord(
+                                new com.bookmystay.model.BookingRecord(
+                                        request.getUserName(),
+                                        roomId,
+                                        type
+                                )
+                        );
+
+                        System.out.println("Booking Confirmed for "
+                                + request.getUserName() + " → " + roomId);
+                    }
+
+                } else {
+                    System.out.println("No rooms available for " + request.getUserName());
                 }
 
-            } else {
-                System.out.println("No rooms available for "
-                        + request.getUserName());
+            } catch (Exception e) {
+                System.out.println("Error for " + request.getUserName() + ": " + e.getMessage());
             }
         }
     }
