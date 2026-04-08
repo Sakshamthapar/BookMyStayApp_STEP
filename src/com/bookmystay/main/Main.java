@@ -1,28 +1,23 @@
 package com.bookmystay.main;
 
 import com.bookmystay.repository.RoomInventory;
+import com.bookmystay.service.RoomSearchService;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("===== BookMyStay App =====");
-
         RoomInventory inventory = new RoomInventory();
 
-        // Initialize inventory
+        // Initialize
         inventory.addRoomType("Single", 5);
-        inventory.addRoomType("Double", 3);
+        inventory.addRoomType("Double", 0); // not available
         inventory.addRoomType("Suite", 2);
 
-        // Display initial state
-        inventory.displayInventory();
+        // Search service
+        RoomSearchService searchService = new RoomSearchService(inventory);
 
-        // Book a room
-        System.out.println("\nBooking a Single Room...");
-        inventory.bookRoom("Single");
-
-        // Display updated state
-        inventory.displayInventory();
+        // Show available rooms
+        searchService.showAvailableRooms();
     }
 }

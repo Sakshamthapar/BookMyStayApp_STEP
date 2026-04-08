@@ -6,7 +6,9 @@ import java.util.Map;
 public class RoomInventory {
 
     private Map<String, Integer> inventory;
-
+    public Map<String, Integer> getInventory() {
+        return inventory;
+    }
     public RoomInventory() {
         inventory = new HashMap<>();
     }
