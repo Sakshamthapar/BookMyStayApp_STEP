@@ -17,6 +17,9 @@ public class RoomInventory {
     public void addRoomType(String type, int count) {
         inventory.put(type, count);
     }
+    public void increaseRoom(String type) {
+        inventory.put(type, inventory.getOrDefault(type, 0) + 1);
+    }
 
     // Get available rooms
     public int getAvailability(String type) {

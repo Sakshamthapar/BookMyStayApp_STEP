@@ -1,8 +1,7 @@
 package com.bookmystay.main;
 
-import com.bookmystay.model.BookingRequest;
-import com.bookmystay.repository.RoomInventory;
 import com.bookmystay.service.*;
+import com.bookmystay.repository.RoomInventory;
 
 public class Main {
 
@@ -10,23 +9,13 @@ public class Main {
 
         RoomInventory inventory = new RoomInventory();
         inventory.addRoomType("Single", 2);
-        inventory.addRoomType("Double", 1);
 
-        BookingHistoryService history = new BookingHistoryService();
-        BookingService service = new BookingService(inventory, history);
+        CancellationService cancelService = new CancellationService(inventory);
 
-        // Add requests
-        service.addRequest(new BookingRequest("Saksham", "Single"));
-        service.addRequest(new BookingRequest("Rahul", "Single"));
-        service.addRequest(new BookingRequest("Amit", "Single"));
+        // Simulate cancellation
+        cancelService.cancelBooking("Single-1", "Single");
+        cancelService.cancelBooking("Single-2", "Single");
 
-        // Process
-        service.processBookings();
-
-        // Show history
-        history.showHistory();
-
-        // Report
-        history.generateReport();
+        cancelService.showCancelled();
     }
 }
