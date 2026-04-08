@@ -23,7 +23,32 @@ public class BookingService {
         assignedRooms = new HashSet<>();
         allocationMap = new HashMap<>();
     }
+    public synchronized void processSingleBooking(BookingRequest request, int roomCounter) {
 
+        String type = request.getRoomType();
+
+        if (inventory.getAvailability(type) > 0) {
+
+            String roomId = type + "-" + roomCounter;
+
+            if (!assignedRooms.contains(roomId)) {
+
+                assignedRooms.add(roomId);
+
+                allocationMap.putIfAbsent(type, new HashSet<>());
+                allocationMap.get(type).add(roomId);
+
+                inventory.bookRoom(type);
+
+                System.out.println(Thread.currentThread().getName() +
+                        " booked → " + roomId);
+            }
+
+        } else {
+            System.out.println(Thread.currentThread().getName() +
+                    " failed (No rooms)");
+        }
+    }
     // Add request
     public void addRequest(BookingRequest request) {
         bookingQueue.add(request);
