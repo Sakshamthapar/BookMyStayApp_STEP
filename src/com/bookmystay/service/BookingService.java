@@ -11,9 +11,11 @@ public class BookingService {
     private Set<String> assignedRooms;
     private Map<String, Set<String>> allocationMap;
     private RoomInventory inventory;
+    private BookingHistoryService historyService;
 
-    public BookingService(RoomInventory inventory) {
+    public BookingService(RoomInventory inventory, BookingHistoryService historyService) {
         this.inventory = inventory;
+        this.historyService = historyService;
         bookingQueue = new LinkedList<>();
         assignedRooms = new HashSet<>();
         allocationMap = new HashMap<>();
