@@ -1,33 +1,22 @@
 package com.bookmystay.main;
 
-import com.bookmystay.model.BookingRequest;
-import com.bookmystay.repository.RoomInventory;
-import com.bookmystay.service.BookingService;
+import com.bookmystay.model.AddOnService;
+import com.bookmystay.service.AddOnServiceManager;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        RoomInventory inventory = new RoomInventory();
+        AddOnServiceManager manager = new AddOnServiceManager();
 
-        // Initialize inventory
-        inventory.addRoomType("Single", 2);
-        inventory.addRoomType("Double", 1);
+        String reservationId = "Single-1";
 
-        BookingService service = new BookingService(inventory);
+        // Add services
+        manager.addService(reservationId, new AddOnService("Food", 500));
+        manager.addService(reservationId, new AddOnService("Spa", 1000));
+        manager.addService(reservationId, new AddOnService("WiFi", 200));
 
-        // Add requests
-        service.addRequest(new BookingRequest("Saksham", "Single"));
-        service.addRequest(new BookingRequest("Rahul", "Single"));
-        service.addRequest(new BookingRequest("Amit", "Single")); // extra
-
-        service.addRequest(new BookingRequest("Neha", "Double"));
-        service.addRequest(new BookingRequest("Riya", "Double")); // extra
-
-        // Process bookings
-        service.processBookings();
-
-        // Show allocations
-        service.displayAllocations();
+        // Show services
+        manager.showServices(reservationId);
     }
 }
